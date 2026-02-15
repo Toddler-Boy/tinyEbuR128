@@ -121,6 +121,7 @@ static double histogram_energy_boundaries[1001];
 static interpolator*
 interp_create(unsigned int taps, unsigned int factor, unsigned int channels) {
   int errcode; /* unused */
+  (void)errcode;
   interpolator* interp;
   unsigned int j;
 

@@ -1,12 +1,13 @@
 #include "tinyEbuR128.h"
 
 #include <cstdlib>
+#include <cassert>
 
 //-----------------------------------------------------------------------------
 
 tinyEbuR128::~tinyEbuR128 ()
 {
-	if ( sts == nullptr )
+	if ( ! sts )
 		return;
 
 	ebur128_destroy ( &sts );
@@ -29,9 +30,29 @@ void tinyEbuR128::init ( const int numChannels, const int sampleRate )
 }
 //-----------------------------------------------------------------------------
 
-void tinyEbuR128::process ( const float* input, const int numFrames )
+void tinyEbuR128::process ( const float* input, const int numSamples )
 {
-	ebur128_add_frames_float ( sts, input, numFrames );
+    assert ( sts && sts->channels == 1 );
+
+    ebur128_add_frames_float ( sts, input, numSamples );
+}
+//-----------------------------------------------------------------------------
+
+void tinyEbuR128::process ( const float* inputL, const float* inputR, const int numFrames )
+{
+    assert ( sts && sts->channels == 2 );
+
+	if ( interleaveBuffer.size () < numFrames * 2 )
+        interleaveBuffer.resize ( numFrames * 2 );
+
+    // Interleave data
+    for ( auto i = 0; i < numFrames; ++i )
+    {
+        interleaveBuffer[ i * 2 ] = inputL[ i ];
+        interleaveBuffer[ i * 2 + 1 ] = inputR[ i ];
+    }
+
+    ebur128_add_frames_float ( sts, interleaveBuffer.data (), numFrames);
 }
 //-----------------------------------------------------------------------------
 
