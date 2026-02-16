@@ -25,7 +25,7 @@ void tinyEbuR128::init ( const int numChannels, const int sampleRate )
     }
     else
     {
-        ebur128_set_channel ( sts, 0, EBUR128_CENTER );
+        ebur128_set_channel ( sts, 0, EBUR128_DUAL_MONO );
     }
 }
 //-----------------------------------------------------------------------------
