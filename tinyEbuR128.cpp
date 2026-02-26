@@ -7,10 +7,7 @@
 
 tinyEbuR128::~tinyEbuR128 ()
 {
-	if ( !sts )
-		return;
-
-	ebur128_destroy ( &sts );
+	destroy ();
 }
 //-----------------------------------------------------------------------------
 
@@ -27,6 +24,17 @@ void tinyEbuR128::init ( const int numChannels, const int sampleRate )
 	{
 		ebur128_set_channel ( sts, 0, EBUR128_DUAL_MONO );
 	}
+}
+//-----------------------------------------------------------------------------
+
+void tinyEbuR128::destroy ()
+{
+	interleaveBuffer = {};
+
+	if ( ! sts )
+		return;
+
+	ebur128_destroy ( &sts );
 }
 //-----------------------------------------------------------------------------
 
